@@ -1,0 +1,26 @@
+:- module main.
+
+main :-
+    S_BOX=[a, b, c, d, e, f], 
+    List=[1, 0, 3, 2, 4],
+    % naturals(5, List), 
+    io:outstream([print(List), nl]), 
+    replace(S_BOX, List, Res), 
+    io:outstream([print(Res), nl]).
+
+replace(S_BOX,[L_Car|L_Cdr],Out) :- 
+    element(S_BOX, L_Car, X),
+    Out=[X|Rest],
+    replace(S_BOX, L_Cdr, Rest).
+replace(S_BOX,[],Out) :- Out=[].
+
+naturals(N,M,List) :- N>=M | List=[].
+naturals(N,M,List) :- N<M  | List=[N|Rest], N1:=N+1, naturals(N1,M,Rest).
+naturals(M,List) :- naturals(0,M,List).
+
+fill(N,V,M,List) :- N>=M | List=[].
+fill(N,V,M,List) :- N<M  | List=[V|Rest], N1:=N+1, fill(N1,V,M,Rest).
+fill(V,M,List) :- fill(0,V,M,List).
+
+element([Car|Cdr],N,Out) :- N=<0 | Out=Car.
+element([Car|Cdr],N,Out) :- N>0 | N1:=N-1, element(Cdr,N1,Out).
