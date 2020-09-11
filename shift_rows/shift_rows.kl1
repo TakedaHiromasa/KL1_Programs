@@ -1,0 +1,40 @@
+:- module main.
+
+main :-
+    naturals(16, List),
+    io:outstream([print(List), nl]),
+    aes:shift_rows(List, Out),
+    io:outstream([print(Out), nl]).
+
+naturals(N,M,List) :- N>=M | List=[].
+naturals(N,M,List) :- N<M  | List=[N|Rest], N1:=N+1, naturals(N1,M,Rest).
+naturals(M,List) :- naturals(0,M,List).
+
+:- module aes.
+shift_rows(0, [Car1, Car2, Car3, Car4 | Cdr], Out) :-
+    Out=[Car1, Car2, Car3, Car4|Rest],
+    shift_rows(~(0+1), Cdr, Rest).
+shift_rows(1, [Car1, Car2, Car3, Car4 | Cdr], Out) :-
+    Out=[Car2, Car3, Car4, Car1|Rest],
+    shift_rows(~(1+1), Cdr, Rest).
+shift_rows(2, [Car1, Car2, Car3, Car4 | Cdr], Out) :-
+    Out=[Car3, Car4, Car1, Car2|Rest],
+    shift_rows(~(2+1), Cdr, Rest).
+shift_rows(3, [Car1, Car2, Car3, Car4 | Cdr], Out) :-
+    Out=[Car4, Car1, Car2, Car3|Rest],
+    shift_rows(~(3+1), Cdr, Rest).
+otherwise.
+shift_rows(N, [Car1, Car2, Car3, Car4 | Cdr], Out) :-
+    rotate_left(N, [Car1, Car2, Car3, Car4], Rotated),
+    Out=[Rotated|Rest],
+    N1 := N+1,
+    shift_rows(N1, Cdr, Rest).
+shift_rows(N, [], Out) :- Out=[].
+shift_rows(List, Out) :- shift_rows(0, List, Out).
+
+rotate_left(N, M, List, Out) :- N>=M | Out=List.
+rotate_left(N, M, [Car|Cdr], Out) :- N<M | append(Cdr,[Car],List), N1:=N+1, rotate_left(N1,M,List,Out).
+rotate_left(M, List, Out) :- rotate_left(0,M,List, Out).
+
+append([], Y, Z) :- Z = Y.
+append([W|X], Y, WZ) :- WZ = [W|Z], append(X, Y, Z).
