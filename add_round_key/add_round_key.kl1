@@ -1,0 +1,22 @@
+:- module main.
+
+main :-
+    naturals(16, Key_List),
+    naturals(16, In_List),
+    builtin:print('Input:'),
+    builtin:print(In_List),
+    builtin:print(Key_List),
+    aes:add_round_key(In_List, Key_List, Out),
+    builtin:print('Output:'),
+    builtin:print(Out).
+
+naturals(N,M,List) :- N>=M | List=[].
+naturals(N,M,List) :- N<M  | List=[N|Rest], N1:=N+1, naturals(N1,M,Rest).
+naturals(M,List) :- naturals(0,M,List).
+
+
+:- module aes.
+add_round_key([In_Car | In_Cdr], [Key_Car | Key_Cdr], Out) :- 
+    Out=[~(In_Car xor Key_Car) | Rest],
+    add_round_key(In_Cdr, Key_Cdr, Rest).
+add_round_key([], [], Out) :- Out=[].
